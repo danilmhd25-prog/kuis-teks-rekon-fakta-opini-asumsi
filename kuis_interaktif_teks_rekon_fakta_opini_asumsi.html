@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Misi Detektif Teks Rekon - Fakta, Opini, & Asumsi</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Outfit & Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- html2pdf.js for PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Outfit"', '"Plus Jakarta Sans"', 'sans-serif'],
+                        mono: ['monospace']
+                    },
+                    colors: {
+                        detective: {
+                            bg: '#0F172A',
+                            card: '#1E293B',
+                            emerald: '#10B981',
+                            teal: '#14B8A6',
+                            cyan: '#06B6D4',
+                            amber: '#F59E0B',
+                            rose: '#F43F5E',
+                            purple: '#A855F7'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: radial-gradient(circle at top center, #1e293b 0%, #0f172a 60%, #020617 100%);
+            min-height: 100vh;
+            color: #f8fafc;
+        }
+        .neon-border-emerald {
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.15);
+        }
+        .neon-border-amber {
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            box-shadow: 0 0 25px -5px rgba(245, 158, 11, 0.2);
+        }
+        .cyber-card {
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(16px);
+        }
+        .btn-bounce {
+            transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .btn-bounce:hover {
+            transform: translateY(-2px) scale(1.01);
+        }
+        .btn-bounce:active {
+            transform: translateY(1px) scale(0.98);
+        }
+        .animate-pop {
+            animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.9) translateY(10px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .glow-text-emerald {
+            text-shadow: 0 0 12px rgba(16, 185, 129, 0.5);
+        }
+        .glow-text-amber {
+            text-shadow: 0 0 12px rgba(245, 158, 11, 0.5);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #10b981; }
+    </style>
+</head>
+<body class="antialiased p-3 md:p-6 min-h-screen flex flex-col justify-between">
+
+    <header class="max-w-5xl w-full mx-auto mb-4 flex flex-wrap justify-between items-center bg-slate-800/90 border border-slate-700/60 p-3.5 md:p-4 rounded-2xl shadow-xl backdrop-blur-md gap-3">
+        <div class="flex items-center space-x-3">
+            <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center text-slate-900 font-black shadow-lg shadow-emerald-950/50 text-xl">
+                <i class="fa-solid fa-magnifying-glass-location"></i>
+            </div>
+            <div>
+                <div class="flex items-center gap-2">
+                    <h1 class="font-extrabold text-base md:text-lg leading-tight text-white tracking-wide">Misi Detektif Teks Rekon</h1>
+                    <span class="px-2 py-0.5 text-[10px] font-black bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 rounded-full uppercase tracking-wider">Fase D</span>
+                </div>
+                <p class="text-xs font-semibold text-teal-400/90">Masteri Fakta, Opini, & Asumsi (Kelas IX)</p>
+            </div>
+        </div>
+
+        <!-- Audio Settings Controls -->
+        <div class="flex items-center space-x-2">
+            <button id="toggleSfxBtn" onclick="toggleSFX()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-extrabold bg-slate-900/80 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
+                <i id="sfxIcon" class="fa-solid fa-volume-high text-emerald-400"></i>
+                <span id="sfxLabel">SFX: ON</span>
+            </button>
+            <button id="toggleTtsBtn" onclick="toggleTTS()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-extrabold bg-slate-900/80 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
+                <i id="ttsIcon" class="fa-solid fa-comment-dots text-cyan-400"></i>
+                <span id="ttsLabel">Narasi: ON</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="max-w-5xl w-full mx-auto flex-1 flex flex-col justify-center my-2">
+
+        <!-- WELCOME & IDENTITY SECTION -->
+        <section id="loginSection" class="cyber-card neon-border-emerald rounded-3xl p-6 md:p-10 max-w-lg mx-auto w-full animate-pop text-center relative overflow-hidden">
+            <div class="absolute -top-16 -right-16 w-36 h-36 bg-emerald-500/10 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-16 -left-16 w-36 h-36 bg-cyan-500/10 rounded-full blur-3xl"></div>
+
+            <div class="relative z-10">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-tr from-emerald-500 via-teal-500 to-cyan-500 rounded-3xl text-slate-950 shadow-lg shadow-emerald-500/20 mb-4 text-3xl font-black">
+                    <i class="fa-solid fa-user-secret"></i>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-black text-white mb-2 tracking-tight">Selamat Datang, Detektif Teks! 🕵️‍♂️</h2>
+                <p class="text-xs md:text-sm text-slate-300 mb-6 leading-relaxed">
+                    Uji ketelitianmu secara berjenjang dalam menganalisis <strong class="text-emerald-400">Fakta</strong>, <strong class="text-amber-400">Opini</strong>, dan <strong class="text-rose-400">Asumsi</strong> dari tingkat mudah hingga tingkat sulit!
+                </p>
+
+                <!-- Student Identity Form -->
+                <form id="identityForm" onsubmit="startQuiz(event)" class="space-y-4 text-left">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                            <i class="fa-solid fa-id-card text-emerald-400"></i> Nama Lengkap Detektif / Siswa
+                        </label>
+                        <input type="text" id="studentName" required placeholder="Contoh: Ananda Rizky" class="w-full px-4 py-3 bg-slate-900/90 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none font-semibold text-sm text-white placeholder:text-slate-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                            <i class="fa-solid fa-graduation-cap text-cyan-400"></i> Pilih Rombel Kelas 9
+                        </label>
+                        <select id="studentClass" required class="w-full px-4 py-3 bg-slate-900/90 border border-slate-700 rounded-xl focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 focus:outline-none font-semibold text-sm text-white">
+                            <option value="" class="text-slate-500">-- Pilih Kelas --</option>
+                            <option value="9.1">Kelas 9.1</option>
+                            <option value="9.2">Kelas 9.2</option>
+                            <option value="9.3">Kelas 9.3</option>
+                            <option value="9.4">Kelas 9.4</option>
+                            <option value="9.5">Kelas 9.5</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="w-full py-4 px-6 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 font-black rounded-xl shadow-lg shadow-teal-500/25 btn-bounce flex items-center justify-center gap-2 text-base mt-3 uppercase tracking-wider">
+                        <span>Mulai Misi Analisis</span>
+                        <i class="fa-solid fa-compass animate-spin text-lg" style="animation-duration: 6s;"></i>
+                    </button>
+                </form>
+
+                <div class="relative my-6">
+                    <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-700/80"></div></div>
+                    <div class="relative flex justify-center text-xs"><span class="bg-slate-800 px-3 text-slate-400 font-bold uppercase tracking-wider">Akses Khusus</span></div>
+                </div>
+
+                <button onclick="openTeacherAuthModal()" class="w-full py-3 px-4 bg-slate-900/80 hover:bg-slate-700/80 text-slate-300 hover:text-white font-bold rounded-xl transition text-xs flex items-center justify-center gap-2 border border-slate-700">
+                    <i class="fa-solid fa-lock text-amber-400"></i>
+                    <span>Masuk ke Dasbor Guru (Rekap Cloud)</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- QUIZ INTERFACE SECTION -->
+        <section id="quizSection" class="hidden max-w-3xl mx-auto w-full animate-pop">
+            <!-- Quiz Top Bar Info -->
+            <div class="cyber-card border border-slate-700/70 rounded-2xl p-4 mb-4 flex flex-wrap justify-between items-center gap-3">
+                <div class="flex items-center gap-2.5">
+                    <div id="levelBadge" class="px-3 py-1 bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-black rounded-full flex items-center gap-1.5 uppercase tracking-wider">
+                        <i class="fa-solid fa-layer-group"></i> <span id="levelText">Tingkat 1: Fondasi</span>
+                    </div>
+                    <div class="text-xs font-bold text-slate-300">
+                        Detektif: <span id="quizStudentInfo" class="text-emerald-400 font-black"></span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="text-xs font-bold text-slate-400">
+                        Soal <span id="currentQNum" class="text-white text-sm font-black">1</span> / <span id="totalQNum">15</span>
+                    </div>
+                    <div class="text-xs font-black text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 rounded-xl">
+                        Skor: <span id="currentScore" class="text-emerald-300 font-black text-sm">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-slate-800/90 rounded-full h-3 mb-5 overflow-hidden border border-slate-700/50 p-0.5">
+                <div id="quizProgressBar" class="bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 h-full rounded-full transition-all duration-300" style="width: 10%"></div>
+            </div>
+
+            <!-- Question Box -->
+            <div class="cyber-card neon-border-emerald rounded-3xl p-6 md:p-8 shadow-2xl relative">
+                <!-- Stimulus / Context Box if present -->
+                <div id="stimulusBox" class="hidden mb-5 p-4 bg-slate-900/90 border border-teal-500/30 rounded-2xl text-xs md:text-sm text-slate-200 font-medium leading-relaxed">
+                    <div class="flex items-center gap-2 font-black text-teal-400 mb-1.5 text-xs uppercase tracking-wider">
+                        <i class="fa-solid fa-file-invoice"></i> Kutipan / Bukti Teks Refensi:
+                    </div>
+                    <div id="stimulusText" class="italic whitespace-pre-line text-slate-300 border-l-2 border-teal-400 pl-3 py-0.5"></div>
+                </div>
+
+                <!-- Question Text -->
+                <div class="flex items-start justify-between gap-3 mb-6">
+                    <h3 id="questionText" class="text-base md:text-lg font-extrabold text-white leading-snug tracking-wide"></h3>
+                    <button onclick="speakCurrentQuestion()" class="text-cyan-400 bg-slate-900/90 border border-slate-700 hover:bg-slate-800 p-3 rounded-2xl transition flex-shrink-0" title="Dengarkan Soal">
+                        <i class="fa-solid fa-volume-high text-lg"></i>
+                    </button>
+                </div>
+
+                <!-- Options Grid -->
+                <div id="optionsContainer" class="space-y-3">
+                    <!-- Dynamic Answer Option Buttons -->
+                </div>
+            </div>
+        </section>
+
+        <!-- RESULT SECTION -->
+        <section id="resultSection" class="hidden cyber-card neon-border-amber rounded-3xl p-6 md:p-10 max-w-xl mx-auto w-full text-center animate-pop">
+            <div class="w-20 h-20 bg-gradient-to-tr from-amber-400 to-orange-500 text-slate-950 rounded-3xl flex items-center justify-center mx-auto text-4xl mb-4 shadow-xl shadow-amber-500/20 font-black">
+                <i class="fa-solid fa-trophy"></i>
+            </div>
+
+            <h2 class="text-2xl md:text-3xl font-black text-white tracking-tight">Misi Selesai! Pertunjukan Hebat! 🎉</h2>
+            <p class="text-slate-400 text-xs md:text-sm mt-1">Data hasil analisismu telah disinkronkan otomatis ke Dasbor Cloud Guru.</p>
+
+            <!-- Score Summary Card -->
+            <div class="my-6 p-5 bg-slate-900/90 rounded-2xl border border-slate-700/80 grid grid-cols-3 gap-2">
+                <div>
+                    <div class="text-[11px] text-slate-400 font-bold uppercase tracking-wider">Skor Akhir</div>
+                    <div id="resFinalScore" class="text-3xl md:text-4xl font-black text-emerald-400 mt-1 glow-text-emerald">0</div>
+                </div>
+                <div>
+                    <div class="text-[11px] text-slate-400 font-bold uppercase tracking-wider">Akurasi</div>
+                    <div id="resAccuracy" class="text-3xl md:text-4xl font-black text-cyan-400 mt-1">0%</div>
+                </div>
+                <div>
+                    <div class="text-[11px] text-slate-400 font-bold uppercase tracking-wider">Benar / Salah</div>
+                    <div class="text-xl md:text-2xl font-black text-white mt-2">
+                        <span id="resCorrect" class="text-emerald-400">0</span> / <span id="resWrong" class="text-rose-400">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <p id="resFeedbackMsg" class="text-xs md:text-sm font-semibold text-slate-200 mb-6 bg-slate-900/80 p-4 rounded-xl border border-amber-500/30 leading-relaxed"></p>
+
+            <div class="flex flex-col sm:flex-row gap-3">
+                <button onclick="restartQuiz()" class="flex-1 py-3.5 px-4 bg-slate-800 hover:bg-slate-700 text-slate-200 font-extrabold rounded-xl transition text-xs md:text-sm flex items-center justify-center gap-2 border border-slate-700">
+                    <i class="fa-solid fa-rotate-right"></i> Ulangi Kuis
+                </button>
+                <button onclick="returnToHome()" class="flex-1 py-3.5 px-4 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black rounded-xl shadow-lg transition text-xs md:text-sm flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-house"></i> Ke Menu Utama
+                </button>
+            </div>
+        </section>
+
+        <!-- TEACHER DASHBOARD SECTION -->
+        <section id="teacherSection" class="hidden cyber-card neon-border-emerald rounded-3xl p-5 md:p-8 w-full animate-pop">
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6 pb-4 border-b border-slate-700/80">
+                <div>
+                    <h2 class="text-xl md:text-2xl font-black text-white flex items-center gap-2.5">
+                        <i class="fa-solid fa-chart-pie text-emerald-400"></i> Dasbor Guru & Rekap Real-Time Cloud
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-1">Hasil pengerjaan kuis Teks Rekon (Fakta, Opini, & Asumsi Berjenjang) SMP Kelas 9</p>
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
+                    <button onclick="exportData('excel')" class="px-3.5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-black rounded-xl text-xs transition flex items-center gap-1.5 shadow-md">
+                        <i class="fa-solid fa-file-excel"></i> Unduh Excel
+                    </button>
+                    <button onclick="exportData('pdf')" class="px-3.5 py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-black rounded-xl text-xs transition flex items-center gap-1.5 shadow-md">
+                        <i class="fa-solid fa-file-pdf"></i> Unduh PDF
+                    </button>
+                    <button onclick="exportData('word')" class="px-3.5 py-2.5 bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-black rounded-xl text-xs transition flex items-center gap-1.5 shadow-md">
+                        <i class="fa-solid fa-file-word"></i> Unduh Word
+                    </button>
+                    <button onclick="returnToHome()" class="px-3.5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl text-xs transition border border-slate-700">
+                        <i class="fa-solid fa-arrow-left"></i> Keluar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Summary Stats Widgets -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+                <div class="bg-slate-900/90 border border-emerald-500/30 p-4 rounded-2xl">
+                    <div class="text-[11px] font-bold uppercase text-emerald-400 tracking-wider">Total Murid</div>
+                    <div id="statTotalStudents" class="text-2xl md:text-3xl font-black text-white mt-1">0</div>
+                </div>
+                <div class="bg-slate-900/90 border border-cyan-500/30 p-4 rounded-2xl">
+                    <div class="text-[11px] font-bold uppercase text-cyan-400 tracking-wider">Rata-Rata Nilai</div>
+                    <div id="statAvgScore" class="text-2xl md:text-3xl font-black text-white mt-1">0</div>
+                </div>
+                <div class="bg-slate-900/90 border border-amber-500/30 p-4 rounded-2xl">
+                    <div class="text-[11px] font-bold uppercase text-amber-400 tracking-wider">Nilai Tertinggi</div>
+                    <div id="statMaxScore" class="text-2xl md:text-3xl font-black text-white mt-1">0</div>
+                </div>
+                <div class="bg-slate-900/90 border border-rose-500/30 p-4 rounded-2xl">
+                    <div class="text-[11px] font-bold uppercase text-rose-400 tracking-wider">Nilai Terendah</div>
+                    <div id="statMinScore" class="text-2xl md:text-3xl font-black text-white mt-1">0</div>
+                </div>
+            </div>
+
+            <!-- Search and Filter controls -->
+            <div class="flex flex-col sm:flex-row gap-3 mb-4">
+                <div class="relative flex-1">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-500"><i class="fa-solid fa-magnifying-glass"></i></span>
+                    <input type="text" id="teacherSearchInput" oninput="filterTeacherTable()" placeholder="Cari nama murid..." class="w-full pl-10 pr-4 py-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-xs font-semibold text-white focus:outline-none focus:ring-2 focus:ring-emerald-400">
+                </div>
+                <select id="teacherClassFilter" onchange="filterTeacherTable()" class="px-4 py-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-xs font-bold text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-400">
+                    <option value="ALL">Semua Rombel Kelas</option>
+                    <option value="9.1">Kelas 9.1</option>
+                    <option value="9.2">Kelas 9.2</option>
+                    <option value="9.3">Kelas 9.3</option>
+                    <option value="9.4">Kelas 9.4</option>
+                    <option value="9.5">Kelas 9.5</option>
+                </select>
+            </div>
+
+            <!-- Table Container -->
+            <div id="exportableArea" class="overflow-x-auto rounded-2xl border border-slate-700 bg-slate-900/90 shadow-xl">
+                <table class="w-full text-left text-xs">
+                    <thead class="bg-slate-800 text-slate-300 font-black uppercase tracking-wider border-b border-slate-700">
+                        <tr>
+                            <th class="p-3.5">No</th>
+                            <th class="p-3.5">Nama Murid</th>
+                            <th class="p-3.5">Kelas</th>
+                            <th class="p-3.5">Skor Akhir</th>
+                            <th class="p-3.5">Akurasi</th>
+                            <th class="p-3.5">Benar / Salah</th>
+                            <th class="p-3.5">Tanggal & Waktu</th>
+                        </tr>
+                    </thead>
+                    <tbody id="teacherTableBody" class="divide-y divide-slate-800 font-medium text-slate-300">
+                        <tr>
+                            <td colspan="7" class="text-center py-8 text-slate-500 font-semibold">Memuat data cloud database...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Educative Feedback Modal -->
+    <div id="feedbackModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="cyber-card rounded-3xl p-6 md:p-8 max-w-lg w-full animate-pop shadow-2xl relative overflow-hidden border border-slate-700">
+            <div id="modalHeaderBg" class="p-4 -mx-6 -mt-6 mb-5 text-center flex flex-col items-center justify-center">
+                <div id="modalIcon" class="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl text-slate-950 shadow-lg mb-2 font-black"></div>
+                <h3 id="modalTitle" class="text-xl font-black text-white"></h3>
+            </div>
+
+            <div class="space-y-3 mb-6">
+                <div>
+                    <span class="text-[10px] font-black uppercase tracking-wider text-slate-400">Analisis Status Pilihan</span>
+                    <p id="modalUserChoice" class="text-xs md:text-sm font-bold text-slate-200 mt-0.5 leading-relaxed"></p>
+                </div>
+                <div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-700">
+                    <span class="text-xs font-black uppercase tracking-wider text-cyan-400 block mb-1 flex items-center gap-1.5">
+                        <i class="fa-solid fa-lightbulb"></i> Kunci Analisis & Penjelasan Ringkas:
+                    </span>
+                    <p id="modalExplanation" class="text-xs md:text-sm leading-relaxed text-slate-300 font-medium"></p>
+                </div>
+            </div>
+
+            <button onclick="nextQuestion()" class="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black rounded-xl shadow-lg btn-bounce text-xs md:text-sm uppercase tracking-wider flex items-center justify-center gap-2">
+                <span>Lanjut ke Soal Berikutnya</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Teacher Auth Modal -->
+    <div id="teacherAuthModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="cyber-card rounded-3xl p-6 md:p-8 max-w-sm w-full animate-pop shadow-2xl border border-slate-700">
+            <div class="text-center mb-5">
+                <div class="w-12 h-12 bg-amber-500/20 text-amber-400 border border-amber-500/40 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-2 font-black">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h3 class="text-lg font-black text-white">Verifikasi Dasbor Guru</h3>
+                <p class="text-xs text-slate-400 mt-1">Masukkan Password/PIN Guru untuk membuka rekap data.</p>
+            </div>
+            <form onsubmit="verifyTeacherPin(event)">
+                <input type="password" id="teacherPinInput" placeholder="PIN Rahasia Guru" required class="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-xl focus:ring-2 focus:ring-amber-400 text-center font-black text-sm text-white mb-2 tracking-widest">
+                <p id="teacherPinError" class="text-xs text-rose-400 font-bold text-center mb-3 hidden">PIN Rahasia salah! Akses ditolak.</p>
+                <div class="flex gap-2">
+                    <button type="button" onclick="closeTeacherAuthModal()" class="flex-1 py-2.5 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-xl font-bold text-xs">Batal</button>
+                    <button type="submit" class="flex-1 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black rounded-xl text-xs shadow-md">Masuk</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'teks-rekon-fakta-opini-app';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+            apiKey: "demo-api-key",
+            authDomain: "demo-project.firebaseapp.com",
+            projectId: "demo-project",
+            storageBucket: "demo-project.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:demo"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+        let quizRecords = [];
+
+        // Local Storage Fallback Key
+        const LOCAL_STORAGE_KEY = 'teks_rekon_fakta_opini_records_backup';
+
+        function loadLocalRecords() {
+            try {
+                const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
+                return stored ? JSON.parse(stored) : [];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveLocalRecord(record) {
+            try {
+                const existing = loadLocalRecords();
+                existing.push(record);
+                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(existing));
+                return existing;
+            } catch (e) {
+                return [];
+            }
+        }
+
+        // Auth handling
+        async function initAuth() {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    const userCred = await signInWithCustomToken(auth, __initial_auth_token);
+                    currentUser = userCred.user;
+                } else {
+                    const userCred = await signInAnonymously(auth);
+                    currentUser = userCred.user;
+                }
+                listenToQuizResults();
+            } catch (err) {
+                console.warn("Auth/Firebase fallback:", err);
+                window.updateTeacherDashboardUI(loadLocalRecords());
+            }
+        }
+
+        // Firestore Realtime Listener with strict error handling & fallback
+        function listenToQuizResults() {
+            if (!currentUser) {
+                window.updateTeacherDashboardUI(loadLocalRecords());
+                return;
+            }
+            const resultsRef = collection(db, 'artifacts', appId, 'public', 'data', 'quiz_results');
+            
+            onSnapshot(resultsRef, (snapshot) => {
+                quizRecords = [];
+                snapshot.forEach(doc => {
+                    quizRecords.push({ id: doc.id, ...doc.data() });
+                });
+
+                // Merge local backup to ensure data persistence
+                const localData = loadLocalRecords();
+                const mergedMap = new Map();
+                [...quizRecords, ...localData].forEach(item => {
+                    const key = `${item.studentName}_${item.studentClass}_${item.date}`;
+                    mergedMap.set(key, item);
+                });
+                
+                const finalRecords = Array.from(mergedMap.values());
+                finalRecords.sort((a, b) => new Date(b.date) - new Date(a.date));
+                window.updateTeacherDashboardUI(finalRecords);
+            }, (error) => {
+                console.warn("Firestore restricted fallback:", error.message);
+                window.updateTeacherDashboardUI(loadLocalRecords());
+            });
+        }
+
+        // Save Result to Firestore and Local Storage
+        window.saveResultToCloud = async function(record) {
+            saveLocalRecord(record);
+            if (!currentUser) return;
+            try {
+                const resultsRef = collection(db, 'artifacts', appId, 'public', 'data', 'quiz_results');
+                await addDoc(resultsRef, record);
+            } catch (err) {
+                console.warn("Local saved, cloud sync notice:", err);
+            }
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initAuth();
+        });
+    </script>
+
+    <script>
+        // 15 Bank Soal Berjenjang Fokus 100% pada Fakta, Opini, dan Asumsi
+        const questionBank = [
+            // ==================== TINGKAT 1: PENGERTIAN & CIRI DASAR (MUDAH) (Soal 1 - 5) ====================
+            {
+                id: 1,
+                level: 1,
+                levelTitle: "Tingkat 1: Pengertian & Ciri Dasar (Mudah)",
+                stimulus: "",
+                question: "Manakah pernyataan yang paling tepat mengenai definisi dari FAKTA dalam sebuah teks informasi?",
+                options: [
+                    "Pernyataan yang memuat data akurat, bukti nyata, dan dapat dibuktikan kebenarannya.",
+                    "Pendapat atau penilaian pribadi seseorang yang bersifat subjektif dan relatif.",
+                    "Dugaan atau perkiraan sementara yang belum didukung oleh bukti konkret.",
+                    "Perasaan suka atau tidak suka dari penulis terhadap suatu peristiwa."
+                ],
+                answer: 0,
+                explanation: "Fakta adalah informasi yang sesuai dengan kenyataan, didasarkan pada data atau bukti yang akurat, serta dapat dibuktikan kebenarannya oleh siapa saja secara objektif."
+            },
+            {
+                id: 2,
+                level: 1,
+                levelTitle: "Tingkat 1: Pengertian & Ciri Dasar (Mudah)",
+                stimulus: "",
+                question: "Ciri utama dari sebuah pernyataan OPINI adalah...",
+                options: [
+                    "Menggunakan angka kuantitatif yang berasal dari penelitian resmi.",
+                    "Bersifat subjektif dan mengandung penilaian atau perasaan pribadi.",
+                    "Memuat tanggal, waktu, dan lokasi kejadian secara pasti.",
+                    "Merupakan hasil rekaman kamera penjelajah tanpa rekayasa."
+                ],
+                answer: 1,
+                explanation: "Opini bersifat subjektif karena mencerminkan pandangan, perasaan, atau penilaian pribadi seseorang yang nilainya bisa berbeda bagi orang lain."
+            },
+            {
+                id: 3,
+                level: 1,
+                levelTitle: "Tingkat 1: Pengertian & Ciri Dasar (Mudah)",
+                stimulus: "",
+                question: "Apakah yang dimaksud dengan ASUMSI dalam pencermatan informasi?",
+                options: [
+                    "Data resmi yang telah disahkan oleh lembaga pemerintah.",
+                    "Pandangan umum yang disepakati oleh seluruh masyarakat.",
+                    "Dugaan atau anggapan dasar yang belum terbukti kebenarannya.",
+                    "Rangkaian kata kerja aksi dalam sebuah kalimat berita."
+                ],
+                answer: 2,
+                explanation: "Asumsi adalah anggapan atau dugaan awal yang diyakini atau diprediksikan oleh seseorang, namun belum dibuktikan dengan data atau bukti nyata."
+            },
+            {
+                id: 4,
+                level: 1,
+                levelTitle: "Tingkat 1: Pengertian & Ciri Dasar (Mudah)",
+                stimulus: "",
+                question: "Penggunaan kata relatif seperti 'sangat', 'paling', atau 'terbaik' merupakan penanda khas jenis informasi...",
+                options: [
+                    "Fakta",
+                    "Opini",
+                    "Asumsi",
+                    "Definisi"
+                ],
+                answer: 1,
+                explanation: "Kata relatif seperti 'sangat', 'paling', dan 'terbaik' menunjukkan ukuran kualitatif yang bersifat subjektif (pendapat seseorang), sehingga menjadi ciri kalimat opini."
+            },
+            {
+                id: 5,
+                level: 1,
+                levelTitle: "Tingkat 1: Pengertian & Ciri Dasar (Mudah)",
+                stimulus: "",
+                question: "Penggunaan kata modalitas dugaan seperti 'sepertinya', 'tampaknya', atau 'mungkin' biasanya mencirikan...",
+                options: [
+                    "Fakta Kuantitatif",
+                    "Data Statistik",
+                    "Kalimat Asumsi",
+                    "Reorientasi Teks"
+                ],
+                answer: 2,
+                explanation: "Kata 'sepertinya', 'tampaknya', dan 'mungkin' menandakan adanya perkiraan atau dugaan yang belum pasti, yang merupakan ciri khas kalimat asumsi."
+            },
+
+            // ==================== TINGKAT 2: ANALISIS & PEMBEDAAN KALIMAT (SEDANG) (Soal 6 - 10) ====================
+            {
+                id: 6,
+                level: 2,
+                levelTitle: "Tingkat 2: Analisis & Pembedaan Kalimat (Sedang)",
+                stimulus: "",
+                question: "Manakah di bawah ini yang merupakan contoh kalimat FAKTA?",
+                options: [
+                    "Upacara bendera dilaksanakan pada hari Senin pukul 07.00 WIB di lapangan sekolah.",
+                    "Suasana upacara bendera pagi ini terasa sangat khidmat dan mengagumkan.",
+                    "Sepertinya seluruh siswa menyukai pembina upacara minggu ini.",
+                    "Mungkin besok pagi akan turun hujan deras di sekolah."
+                ],
+                answer: 0,
+                explanation: "Kalimat pertama memuat keterangan hari (Senin), waktu (pukul 07.00 WIB), dan tempat (lapangan sekolah) yang dapat dibuktikan kebenarannya secara nyata."
+            },
+            {
+                id: 7,
+                level: 2,
+                levelTitle: "Tingkat 2: Analisis & Pembedaan Kalimat (Sedang)",
+                stimulus: "",
+                question: "Manakah kalimat di bawah ini yang tergolong sebagai OPINI?",
+                options: [
+                    "Perpustakaan sekolah memiliki koleksi 2.500 judul buku.",
+                    "Gedung perpustakaan sekolah diresmikan pada tahun 2020.",
+                    "Membaca di perpustakaan sekolah jauh lebih menyenangkan daripada di kelas.",
+                    "Jumlah pengunjung perpustakaan mencapai 50 siswa per hari."
+                ],
+                answer: 2,
+                explanation: "Frasa 'jauh lebih menyenangkan' adalah bentuk penilaian subjektif (opini) yang dirasakan berbeda oleh setiap individu."
+            },
+            {
+                id: 8,
+                level: 2,
+                levelTitle: "Tingkat 2: Analisis & Pembedaan Kalimat (Sedang)",
+                stimulus: "",
+                question: "Perhatikan kalimat: 'Tampaknya siswa kelas 9 kurang tidur karena kemarin ada tugas menumpuk.' Kalimat tersebut termasuk ASUMSI karena...",
+                options: [
+                    "Memuat angka dan tanggal pelaksanaan tugas.",
+                    "Merupakan dugaan penulis yang ditandai kata 'Tampaknya'.",
+                    "Berisi pendapat resmi dari pihak pengelola sekolah.",
+                    "Menjelaskan urutan langkah-langkah belajar."
+                ],
+                answer: 1,
+                explanation: "Penggunaan kata 'Tampaknya' menunjukkan perkiraan atau spekulasi penulis mengenai penyebab siswa kurang tidur tanpa data verifikasi langsung."
+            },
+            {
+                id: 9,
+                level: 2,
+                levelTitle: "Tingkat 2: Analisis & Pembedaan Kalimat (Sedang)",
+                stimulus: "Kalimat A: 'Menurut saya, es teh di kantin sekolah adalah minuman terenak.'\nKalimat B: 'Kantin sekolah ramai sekali, sepertinya es tehnya sudah habis.'",
+                question: "Manakah analisis perbedaan yang tepat antara Kalimat A dan Kalimat B di atas?",
+                options: [
+                    "Kalimat A adalah Fakta, sedangkan Kalimat B adalah Opini.",
+                    "Kalimat A adalah Opini, sedangkan Kalimat B adalah Asumsi.",
+                    "Kalimat A adalah Asumsi, sedangkan Kalimat B adalah Fakta.",
+                    "Kedua kalimat merupakan Fakta ilmiah."
+                ],
+                answer: 1,
+                explanation: "Kalimat A adalah Opini (penilaian pribadi 'menurut saya', 'terenak'). Kalimat B adalah Asumsi (dugaan perkiraan 'sepertinya es tehnya sudah habis')."
+            },
+            {
+                id: 10,
+                level: 2,
+                levelTitle: "Tingkat 2: Analisis & Pembedaan Kalimat (Sedang)",
+                stimulus: "",
+                question: "Untuk mengubah kalimat Opini 'Udara di ruang laboratorium sangat dingin' menjadi FAKTA, langkah yang paling tepat adalah...",
+                options: [
+                    "Mengganti kata 'sangat dingin' menjadi 'dingin sekali'.",
+                    "Menambahkan kata 'sepertinya' di awal kalimat.",
+                    "Mengukur dan menuliskan angka suhu, misalnya 'Suhu udara di laboratorium adalah 18°C'.",
+                    "Menambahkan pandangan dari siswa kelas lain."
+                ],
+                answer: 2,
+                explanation: "Fakta memerlukan data terukur dan objektif. Menuliskan angka suhu konkret (18°C) mengubah penilaian kualitatif yang subjektif menjadi data objektif."
+            },
+
+            // ==================== TINGKAT 3: EVALUASI KRITIS & KONTEKS TEKS (SULIT) (Soal 11 - 15) ====================
+            {
+                id: 11,
+                level: 3,
+                levelTitle: "Tingkat 3: Evaluasi Kritis & Konteks Teks (Sulit)",
+                stimulus: "Cermati paragraf berikut:\n(1) Kegiatan kerja bakti dilaksanakan pada hari Sabtu, 12 Oktober 2024.\n(2) Seluruh siswa bekerja dengan sangat rajin dan gembira.\n(3) Tampaknya, sampah plastik di halaman sekolah berkurang drastis dibanding minggu lalu.\n(4) Sebanyak 50 kg sampah organik berhasil dikumpulkan.",
+                question: "Berdasarkan paragraf di atas, pasangan kalimat manakah yang berturut-turut merupakan FAKTA dan ASUMSI?",
+                options: [
+                    "Kalimat (1) adalah Fakta, dan Kalimat (3) adalah Asumsi.",
+                    "Kalimat (2) adalah Fakta, dan Kalimat (4) adalah Asumsi.",
+                    "Kalimat (3) adalah Fakta, dan Kalimat (1) adalah Asumsi.",
+                    "Kalimat (4) adalah Fakta, dan Kalimat (2) adalah Asumsi."
+                ],
+                answer: 0,
+                explanation: "Kalimat (1) adalah Fakta (tanggal pasti 12 Oktober 2024), sedangkan kalimat (3) adalah Asumsi karena berupa dugaan/perkiraan yang ditandai kata 'Tampaknya'."
+            },
+            {
+                id: 12,
+                level: 3,
+                levelTitle: "Tingkat 3: Evaluasi Kritis & Konteks Teks (Sulit)",
+                stimulus: "Ditemukan laporan: 'Banyak siswa terlambat hari ini. Sepertinya hal ini terjadi karena ada kemacetan parah di jalan utama.'",
+                question: "Mengapa bagian kedua dari laporan tersebut berisiko jika langsung dijadikan dasar keputusan resmi sekolah?",
+                options: [
+                    "Karena bagian kedua adalah Fakta statistik yang tidak perlu diuji.",
+                    "Karena bagian kedua baru berupa Asumsi tanpa verifikasi data penyebab keterlambatan yang sebenarnya.",
+                    "Karena bagian kedua memuat kalimat saran tertulis.",
+                    "Karena bagian kedua sudah disetujui oleh seluruh wali murid."
+                ],
+                answer: 1,
+                explanation: "Mengambil keputusan berdasarkan Asumsi ('sepertinya') berisiko salah langkah karena penyebab asli keterlambatan belum diverifikasi dengan data konkret di lapangan."
+            },
+            {
+                id: 13,
+                level: 3,
+                levelTitle: "Tingkat 3: Evaluasi Kritis & Konteks Teks (Sulit)",
+                stimulus: "Kutipan 1: 'Siswa kelas 9.1 pantas menang karena penampilannya sangat memukau.'\nKutipan 2: 'Siswa kelas 9.1 meraih nilai tertinggi yaitu 95 dari juri.'",
+                question: "Bagaimanakah perbedaan mendasar antara nilai kebenaran pada Kutipan 1 dan Kutipan 2?",
+                options: [
+                    "Kutipan 1 dapat diperdebatkan (opini), sedangkan Kutipan 2 adalah kepastian mutlak (fakta).",
+                    "Kutipan 1 adalah dugaan sementara (asumsi), sedangkan Kutipan 2 adalah opini pribadi.",
+                    "Kutipan 1 adalah fakta kuantitatif, sedangkan Kutipan 2 adalah perkiraan.",
+                    "Kedua kutipan sama-sama tidak dapat dibuktikan."
+                ],
+                answer: 0,
+                explanation: "Kutipan 1 bersifat subjektif (opini) sehingga orang lain bisa tidak setuju. Kutipan 2 bersifat objektif (fakta nilai 95) yang terverifikasi dan tercatat secara resmi."
+            },
+            {
+                id: 14,
+                level: 3,
+                levelTitle: "Tingkat 3: Evaluasi Kritis & Konteks Teks (Sulit)",
+                stimulus: "Cermati wacana berikut:\n'Museum Nasional dikunjungi oleh 1.200 wisatawan pada akhir pekan. Bangunan museum tersebut sangat megah dan tertata rapi. Dilihat dari antusiasme pengunjung, sepertinya museum ini akan menjadi destinasi terpopuler tahun ini.'",
+                question: "Berdasarkan wacana di atas, manakah urutan jenis informasi yang tepat dari ketiga kalimat tersebut?",
+                options: [
+                    "Fakta – Opini – Asumsi",
+                    "Opini – Asumsi – Fakta",
+                    "Asumsi – Fakta – Opini",
+                    "Fakta – Asumsi – Opini"
+                ],
+                answer: 0,
+                explanation: "Kalimat 1 = Fakta (1.200 wisatawan). Kalimat 2 = Opini ('sangat megah'). Kalimat 3 = Asumsi ('sepertinya museum ini akan menjadi terpopuler')."
+            },
+            {
+                id: 15,
+                level: 3,
+                levelTitle: "Tingkat 3: Evaluasi Kritis & Konteks Teks (Sulit)",
+                stimulus: "",
+                question: "Mengapa seorang pembaca kritis wajib memisahkan antara Fakta, Opini, dan Asumsi saat membaca sebuah berita atau teks rekon?",
+                options: [
+                    "Agar dapat membedakan mana informasi tepercaya dan mana pendapat atau dugaan yang belum terbukti.",
+                    "Agar dapat menghapus semua tulisan opini dan hanya membaca angka saja.",
+                    "Agar tidak perlu lagi membaca teks secara menyeluruh.",
+                    "Agar bisa membuat cerita fiksi yang menarik."
+                ],
+                answer: 0,
+                explanation: "Memisahkan fakta, opini, dan asumsi melatih kemampuan berpikir kritis sehingga pembaca tidak mudah terkecoh oleh dugaan atau penilaian subjektif yang belum terbukti kebenarannya."
+            }
+        ];
+
+        // Audio and State Variables
+        let sfxEnabled = true;
+        let ttsEnabled = true;
+        let audioCtx = null;
+
+        function getAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
+
+        function toggleSFX() {
+            sfxEnabled = !sfxEnabled;
+            document.getElementById('sfxLabel').innerText = `SFX: ${sfxEnabled ? 'ON' : 'OFF'}`;
+            document.getElementById('sfxIcon').className = sfxEnabled ? 'fa-solid fa-volume-high text-emerald-400' : 'fa-solid fa-volume-xmark text-slate-500';
+        }
+
+        function toggleTTS() {
+            ttsEnabled = !ttsEnabled;
+            document.getElementById('ttsLabel').innerText = `Narasi: ${ttsEnabled ? 'ON' : 'OFF'}`;
+            document.getElementById('ttsIcon').className = ttsEnabled ? 'fa-solid fa-comment-dots text-cyan-400' : 'fa-solid fa-comment-slash text-slate-500';
+            if (!ttsEnabled && window.speechSynthesis) {
+                window.speechSynthesis.cancel();
+            }
+        }
+
+        // Web Audio API Synthesizer Sound Effects
+        function playSound(type) {
+            if (!sfxEnabled) return;
+            try {
+                const ctx = getAudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                if (type === 'correct') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+                    osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.08); // E5
+                    osc.frequency.setValueAtTime(783.99, ctx.currentTime + 0.16); // G5
+                    osc.frequency.setValueAtTime(1046.50, ctx.currentTime + 0.24); // C6
+                    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.45);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.45);
+                } else if (type === 'wrong') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, ctx.currentTime);
+                    osc.frequency.setValueAtTime(174.61, ctx.currentTime + 0.15); // F3
+                    gain.gain.setValueAtTime(0.25, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.4);
+                } else if (type === 'finish') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(440, ctx.currentTime);
+                    osc.frequency.setValueAtTime(554.37, ctx.currentTime + 0.1);
+                    osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.2);
+                    osc.frequency.setValueAtTime(880, ctx.currentTime + 0.3);
+                    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.6);
+                }
+            } catch (e) {
+                console.warn("Audio Context notice:", e);
+            }
+        }
+
+        function speakText(text) {
+            if (!ttsEnabled || !('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'id-ID';
+            utterance.rate = 0.95;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        let currentQuestionIdx = 0;
+        let studentProfile = { name: '', class: '' };
+        let score = 0;
+        let correctCount = 0;
+        let wrongCount = 0;
+        let userAnswers = [];
+
+        function startQuiz(event) {
+            event.preventDefault();
+            const nameInput = document.getElementById('studentName').value.trim();
+            const classInput = document.getElementById('studentClass').value;
+
+            if (!nameInput || !classInput) return;
+
+            studentProfile.name = nameInput;
+            studentProfile.class = classInput;
+
+            document.getElementById('quizStudentInfo').innerText = `${studentProfile.name} (${studentProfile.class})`;
+
+            // Reset quiz variables
+            currentQuestionIdx = 0;
+            score = 0;
+            correctCount = 0;
+            wrongCount = 0;
+            userAnswers = [];
+
+            // Switch Screen
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('quizSection').classList.remove('hidden');
+
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const q = questionBank[currentQuestionIdx];
+
+            // Progress & Level Indicators
+            document.getElementById('currentQNum').innerText = currentQuestionIdx + 1;
+            document.getElementById('totalQNum').innerText = questionBank.length;
+            document.getElementById('currentScore').innerText = score;
+            document.getElementById('levelText').innerText = q.levelTitle;
+
+            const progressPct = ((currentQuestionIdx + 1) / questionBank.length) * 100;
+            document.getElementById('quizProgressBar').style.width = `${progressPct}%`;
+
+            // Stimulus Box Handling
+            const stimulusBox = document.getElementById('stimulusBox');
+            if (q.stimulus) {
+                document.getElementById('stimulusText').innerText = q.stimulus;
+                stimulusBox.classList.remove('hidden');
+            } else {
+                stimulusBox.classList.add('hidden');
+            }
+
+            // Question text
+            document.getElementById('questionText').innerText = q.question;
+
+            // Render Options
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+
+            q.options.forEach((optText, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-2xl bg-slate-900/80 border border-slate-700/80 hover:border-emerald-400 hover:bg-slate-800 transition font-medium text-xs md:text-sm text-slate-200 flex items-start gap-3 btn-bounce shadow-sm group";
+                btn.onclick = () => handleAnswer(idx);
+                btn.innerHTML = `
+                    <span class="w-7 h-7 rounded-xl bg-slate-800 text-emerald-400 font-black flex items-center justify-center text-xs border border-slate-700 flex-shrink-0 group-hover:border-emerald-400 group-hover:bg-emerald-500/20">
+                        ${String.fromCharCode(65 + idx)}
+                    </span>
+                    <span class="leading-relaxed flex-1 mt-0.5">${optText}</span>
+                `;
+                optionsContainer.appendChild(btn);
+            });
+
+            // Speak question automatically if TTS is on
+            speakCurrentQuestion();
+        }
+
+        function speakCurrentQuestion() {
+            const q = questionBank[currentQuestionIdx];
+            const fullText = `${q.question}. Pilihan A: ${q.options[0]}. Pilihan B: ${q.options[1]}. Pilihan C: ${q.options[2]}. Pilihan D: ${q.options[3]}`;
+            speakText(fullText);
+        }
+
+        function handleAnswer(selectedIdx) {
+            if (window.speechSynthesis) window.speechSynthesis.cancel();
+
+            const q = questionBank[currentQuestionIdx];
+            const isCorrect = selectedIdx === q.answer;
+
+            if (isCorrect) {
+                score += 10;
+                correctCount++;
+                playSound('correct');
+            } else {
+                wrongCount++;
+                playSound('wrong');
+            }
+
+            userAnswers.push({
+                questionId: q.id,
+                selected: selectedIdx,
+                isCorrect: isCorrect
+            });
+
+            showFeedbackModal(isCorrect, selectedIdx, q);
+        }
+
+        function showFeedbackModal(isCorrect, selectedIdx, questionObj) {
+            const modal = document.getElementById('feedbackModal');
+            const modalHeaderBg = document.getElementById('modalHeaderBg');
+            const modalIcon = document.getElementById('modalIcon');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalUserChoice = document.getElementById('modalUserChoice');
+            const modalExplanation = document.getElementById('modalExplanation');
+
+            if (isCorrect) {
+                modalHeaderBg.className = "p-4 -mx-6 -mt-6 mb-5 text-center flex flex-col items-center justify-center bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500";
+                modalIcon.className = "w-16 h-16 rounded-2xl bg-slate-950/20 flex items-center justify-center text-3xl text-slate-950 shadow-md mb-2 backdrop-blur-md font-black";
+                modalIcon.innerHTML = `<i class="fa-solid fa-circle-check"></i>`;
+                modalTitle.innerText = "Luar Biasa, Analisis Tepat! 🎉";
+                modalUserChoice.innerHTML = `<span class="text-emerald-400 font-black">Jawabanmu Benar:</span> ${questionObj.options[selectedIdx]}`;
+            } else {
+                modalHeaderBg.className = "p-4 -mx-6 -mt-6 mb-5 text-center flex flex-col items-center justify-center bg-gradient-to-r from-rose-500 to-amber-500";
+                modalIcon.className = "w-16 h-16 rounded-2xl bg-slate-950/20 flex items-center justify-center text-3xl text-slate-950 shadow-md mb-2 backdrop-blur-md font-black";
+                modalIcon.innerHTML = `<i class="fa-solid fa-circle-xmark"></i>`;
+                modalTitle.innerText = "Mari Pelajari Kuncinya! 💪";
+                modalUserChoice.innerHTML = `<span class="text-rose-400 font-black">Pilihanmu:</span> ${questionObj.options[selectedIdx]}<br><span class="text-emerald-400 font-black mt-1 block">Jawaban Tepat:</span> ${questionObj.options[questionObj.answer]}`;
+            }
+
+            modalExplanation.innerText = questionObj.explanation;
+            modal.classList.remove('hidden');
+
+            speakText(isCorrect ? "Analisis kamu tepat sekali! " + questionObj.explanation : "Mari pelajari alasannya. " + questionObj.explanation);
+        }
+
+        function nextQuestion() {
+            document.getElementById('feedbackModal').classList.add('hidden');
+
+            if (currentQuestionIdx < questionBank.length - 1) {
+                currentQuestionIdx++;
+                renderQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            playSound('finish');
+            document.getElementById('quizSection').classList.add('hidden');
+            document.getElementById('resultSection').classList.remove('hidden');
+
+            const totalQ = questionBank.length;
+            const accuracyPct = Math.round((correctCount / totalQ) * 100);
+
+            document.getElementById('resFinalScore').innerText = score;
+            document.getElementById('resAccuracy').innerText = `${accuracyPct}%`;
+            document.getElementById('resCorrect').innerText = correctCount;
+            document.getElementById('resWrong').innerText = wrongCount;
+
+            let feedbackMsg = "";
+            if (accuracyPct >= 80) {
+                feedbackMsg = "Sangat Hebat, Detektif Kritis! Kamu telah menguasai analisis pembeda Fakta (bukti konkret), Opini (penilaian subjektif), dan Asumsi (dugaan) hingga tingkat sulit! 🌟";
+            } else if (accuracyPct >= 60) {
+                feedbackMsg = "Bagus Sekali! Kemampuan analisismu sudah lumayan tajam. Mari cermati kembali kata-kata kunci pemicu Asumsi dan Opini agar makin sempurna! 👍";
+            } else {
+                feedbackMsg = "Tetap Semangat! Pelajari kembali kunci membedakan Fakta (data terukur), Opini (kata relatif), dan Asumsi (kata modalitas dugaan) lalu coba lagi! 💪";
+            }
+            document.getElementById('resFeedbackMsg').innerText = feedbackMsg;
+
+            // Save payload to cloud and local storage
+            const payload = {
+                studentName: studentProfile.name,
+                studentClass: studentProfile.class,
+                score: score,
+                accuracy: accuracyPct,
+                correctCount: correctCount,
+                wrongCount: wrongCount,
+                totalQuestions: totalQ,
+                date: new Date().toISOString()
+            };
+
+            if (window.saveResultToCloud) {
+                window.saveResultToCloud(payload);
+            }
+        }
+
+        function restartQuiz() {
+            document.getElementById('resultSection').classList.add('hidden');
+            document.getElementById('loginSection').classList.remove('hidden');
+        }
+
+        function returnToHome() {
+            if (window.speechSynthesis) window.speechSynthesis.cancel();
+            document.getElementById('resultSection').classList.add('hidden');
+            document.getElementById('teacherSection').classList.add('hidden');
+            document.getElementById('quizSection').classList.add('hidden');
+            document.getElementById('loginSection').classList.remove('hidden');
+        }
+
+        function openTeacherAuthModal() {
+            const errorEl = document.getElementById('teacherPinError');
+            if (errorEl) errorEl.classList.add('hidden');
+            document.getElementById('teacherPinInput').value = '';
+            document.getElementById('teacherAuthModal').classList.remove('hidden');
+        }
+
+        function closeTeacherAuthModal() {
+            document.getElementById('teacherAuthModal').classList.add('hidden');
+        }
+
+        function verifyTeacherPin(event) {
+            event.preventDefault();
+            const pin = document.getElementById('teacherPinInput').value;
+            
+            // PIN Rahasia Guru
+            const SECRET_PASSWORD = 'GuruRekon2026!';
+
+            if (pin === SECRET_PASSWORD) {
+                closeTeacherAuthModal();
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('teacherSection').classList.remove('hidden');
+            } else {
+                const errorEl = document.getElementById('teacherPinError');
+                if (errorEl) errorEl.classList.remove('hidden');
+            }
+        }
+
+        window.updateTeacherDashboardUI = function(records) {
+            const tbody = document.getElementById('teacherTableBody');
+            if (!tbody) return;
+
+            tbody.innerHTML = '';
+
+            if (!records || records.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-8 text-slate-500 font-semibold">Belum ada data pengerjaan murid yang tersimpan.</td></tr>`;
+                document.getElementById('statTotalStudents').innerText = "0";
+                document.getElementById('statAvgScore').innerText = "0";
+                document.getElementById('statMaxScore').innerText = "0";
+                document.getElementById('statMinScore').innerText = "0";
+                return;
+            }
+
+            let totalScore = 0;
+            let maxScore = -1;
+            let minScore = 999;
+
+            records.forEach((rec, idx) => {
+                totalScore += rec.score;
+                if (rec.score > maxScore) maxScore = rec.score;
+                if (rec.score < minScore) minScore = rec.score;
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-800/80 transition data-row";
+                tr.setAttribute('data-name', rec.studentName.toLowerCase());
+                tr.setAttribute('data-class', rec.studentClass);
+
+                const dateStr = new Date(rec.date).toLocaleDateString('id-ID', {
+                    day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+                });
+
+                tr.innerHTML = `
+                    <td class="p-3.5 font-bold text-slate-500">${idx + 1}</td>
+                    <td class="p-3.5 font-bold text-white">${rec.studentName}</td>
+                    <td class="p-3.5"><span class="px-2.5 py-1 bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-black rounded-lg">${rec.studentClass}</span></td>
+                    <td class="p-3.5 font-black text-emerald-400 text-sm">${rec.score}</td>
+                    <td class="p-3.5 font-bold text-teal-300">${rec.accuracy}%</td>
+                    <td class="p-3.5 font-medium"><span class="text-emerald-400 font-bold">${rec.correctCount} B</span> / <span class="text-rose-400 font-bold">${rec.wrongCount} S</span></td>
+                    <td class="p-3.5 text-slate-400 text-xs">${dateStr}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // Update stats
+            document.getElementById('statTotalStudents').innerText = records.length;
+            document.getElementById('statAvgScore').innerText = Math.round(totalScore / records.length);
+            document.getElementById('statMaxScore').innerText = maxScore;
+            document.getElementById('statMinScore').innerText = minScore === 999 ? 0 : minScore;
+        };
+
+        function filterTeacherTable() {
+            const searchVal = document.getElementById('teacherSearchInput').value.toLowerCase();
+            const classVal = document.getElementById('teacherClassFilter').value;
+            const rows = document.querySelectorAll('#teacherTableBody .data-row');
+
+            rows.forEach(row => {
+                const name = row.getAttribute('data-name');
+                const studentClass = row.getAttribute('data-class');
+
+                const matchesSearch = name.includes(searchVal);
+                const matchesClass = (classVal === 'ALL' || studentClass === classVal);
+
+                if (matchesSearch && matchesClass) {
+                    row.classList.remove('hidden');
+                } else {
+                    row.classList.add('hidden');
+                }
+            });
+        }
+
+        function exportData(format) {
+            const table = document.querySelector("#exportableArea table");
+            if (!table) return;
+
+            const filename = `Rekap_Nilai_Teks_Rekon_Fakta_Opini_Asumsi_${new Date().toISOString().slice(0, 10)}`;
+
+            if (format === 'excel') {
+                let csv = [];
+                const rows = table.querySelectorAll("tr");
+                for (let i = 0; i < rows.length; i++) {
+                    if (rows[i].classList.contains('hidden')) continue;
+                    let row = [], cols = rows[i].querySelectorAll("td, th");
+                    for (let j = 0; j < cols.length; j++) {
+                        let text = cols[j].innerText.replace(/(\r\n|\n|\r)/gm, " ").replace(/"/g, '""');
+                        row.push('"' + text + '"');
+                    }
+                    csv.push(row.join(","));
+                }
+                const csvContent = "\uFEFF" + csv.join("\n");
+                const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.setAttribute("download", `${filename}.csv`);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } 
+            else if (format === 'pdf') {
+                const element = document.getElementById('exportableArea');
+                const opt = {
+                    margin:       0.5,
+                    filename:     `${filename}.pdf`,
+                    image:        { type: 'jpeg', quality: 0.98 },
+                    html2canvas:  { scale: 2 },
+                    jsPDF:        { unit: 'in', format: 'letter', orientation: 'landscape' }
+                };
+                html2pdf().set(opt).from(element).save();
+            } 
+            else if (format === 'word') {
+                const htmlHeader = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export Word</title></head><body>";
+                const htmlFooter = "</body></html>";
+                const sourceHTML = htmlHeader + document.getElementById('exportableArea').innerHTML + htmlFooter;
+                const source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+                const fileDownload = document.createElement("a");
+                document.body.appendChild(fileDownload);
+                fileDownload.href = source;
+                fileDownload.download = `${filename}.doc`;
+                fileDownload.click();
+                document.body.removeChild(fileDownload);
+            }
+        }
+    </script>
+</body>
+</html>
